@@ -1,0 +1,22 @@
+The version of worker node cannot be greater than the control plan. It will cause backward compatibility issue and the version of control plan will always be greater than the worker node.
+
+TO CREATE A COPY OF A POD AND A AN IMAGE FOR DEBUGGING PURPOSE. IT IS DONE MOSTLY ON THE POD WHICH ARE CREATED USING DISTROLESS IMAGES BECAUSE THEY DON’T HAVE MUCH UTILITIES AND CAPABILITIES FOR DEBUGGING PURPOSE.
+
+kubectl run myapp --image=busybox:1.28 --restart=Never -- sleep 1d
+
+Run this command to create a copy of myapp named myapp-debug that adds a new Ubuntu container for debugging:
+kubectl debug myapp -it --image=ubuntu --share-processes --copy-to=myapp-debug
+
+
+Example debugging using ephemeral containers
+You can use the kubectl debug command to add ephemeral containers to a running Pod. First, create a pod for the example:
+kubectl run ephemeral-demo --image=registry.k8s.io/pause:3.1 --restart=Never
+The examples in this section use the pause container image because it does not contain debugging utilities, but this method works with all container images.
+If you attempt to use kubectl exec to create a shell you will see an error because there is no shell in this container image.
+kubectl exec -it ephemeral-demo -- sh
+OCI runtime exec failed: exec failed: container_linux.go:346: starting container process caused "exec: \"sh\": executable file not found in $PATH": unknown
+You can instead add a debugging container using kubectl debug. If you specify the -i/--interactive argument, kubectl will automatically attach to the console of the Ephemeral Container.
+kubectl debug -it ephemeral-demo --image=busybox:1.28 --target=ephemeral-demo
+EPHIMERAL CONTAINERS CANNOT BE KILLED OR DESTROYED. IF YOU WANT TO DESTROY IT, YOU WILL NEED TO DESTROY THE ENTIRE POD.
+
+
