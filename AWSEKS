@@ -1,0 +1,22 @@
+EKS
+
+EBS VOLUME IN EKS:
+
+The EBS is availability zone bounded so if you’re using it any AZ for a pod and this storage cannot be shared to different AZ pod.
+
+EBS is like a block storage. You can do whatever you want with it. It is like a hard drive.
+EFS is NFS and it only allows you to read and write data. The format and etc is taken care by the service provider.
+
+In EKS, you use AWSEEBCSI driver to mount the EBS storage. The kubelet talk to this storage driver and its responsibility is to share the attached storage. 
+
+You get two components with AWSEEBCSI driver one is the CONTROLLER. It manage the lifecycle of the volume such as creation, deletion and etc. The second component is the DAEMON set which will be running on all the nodes.
+
+SECRET:
+
+Secrets built into Kubernetes are not encrypted. They are just base64 encoded and can be decode easily.
+
+To protect secrets, put a strong RBAC and namespace separation and control those secrets inside as native secret.
+
+Using something external is a more secure way of managing secret such as AWS SECRET STORE and HASI CORP.
+
+ 
